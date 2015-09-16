@@ -5,8 +5,8 @@ PYTHON3_VERSION ?= $(PYTHON3_VERSION_DETECTED)
 
 PYTHON3_INCLUDE_PATH ?= $(VIRTUALENV3)/include/python3$(PYTHON3_VERSION)
 PYTHON3 ?= python3$(PYTHON3_VERSION)
-PIP ?= pip
-PYFLAKES ?= true
+PIP3 ?= pip
+PYFLAKES3 ?= true
 # Override this to run a cmd before installing python3_requirements.txt
 PYTHON3_DEPENDENCIES_PRE_CMD ?= true
 
@@ -32,7 +32,7 @@ endif
 python3_dependencies:
 	if [ -f python3_requirements.txt ]; then \
 		$(PYTHON3_DEPENDENCIES_PRE_CMD); \
-		$(PIP) install -r python3_requirements.txt; \
+		$(PIP3) install -r python3_requirements.txt; \
 	fi
 
 # Loop over the python3_extra_requirements.txt file and install packages in
@@ -82,7 +82,7 @@ define python3_test
 ifneq ($(PREMAKE),1)
 $$(if $(trace),$$(warning called python3_test "$(1)" "$(2)" "$(3)" "$(4)"))
 
-TEST_$(1)_COMMAND := rm -f $(TESTS)/$(1).{passed,failed} && $(PYFLAKES) $(CWD)/$(1).py && ((set -o pipefail && PYTHON3PATH=$(RUN_PYTHON3PATH) $(PYTHON3) $(PYTHON3_ARGS) $(CWD)/$(1).py > $(TESTS)/$(1).running 2>&1 && mv $(TESTS)/$(1).running $(TESTS)/$(1).passed) || (mv $(TESTS)/$(1).running $(TESTS)/$(1).failed && echo "                 $(COLOR_RED)$(1) FAILED$(COLOR_RESET)" && cat $(TESTS)/$(1).failed && false))
+TEST_$(1)_COMMAND := rm -f $(TESTS)/$(1).{passed,failed} && $(PYFLAKES3) $(CWD)/$(1).py && ((set -o pipefail && PYTHON3PATH=$(RUN_PYTHON3PATH) $(PYTHON3) $(PYTHON3_ARGS) $(CWD)/$(1).py > $(TESTS)/$(1).running 2>&1 && mv $(TESTS)/$(1).running $(TESTS)/$(1).passed) || (mv $(TESTS)/$(1).running $(TESTS)/$(1).failed && echo "                 $(COLOR_RED)$(1) FAILED$(COLOR_RESET)" && cat $(TESTS)/$(1).failed && false))
 
 $(TESTS)/$(1).passed:	$(TESTS)/.dir_exists $(CWD)/$(1).py $$(foreach lib,$(2),$$(PYTHON3_$$(lib)_DEPS)) $$(foreach pymod,$(2),$(TMPBIN)/$$(pymod)_pymod)
 	$$(if $(verbose_build),@echo '$$(TEST_$(1)_COMMAND)',@echo "      $(COLOR_VIOLET)[TESTCASE]$(COLOR_RESET) $(1)")
@@ -90,7 +90,7 @@ $(TESTS)/$(1).passed:	$(TESTS)/.dir_exists $(CWD)/$(1).py $$(foreach lib,$(2),$$
 	$$(if $(verbose_build),@echo '$$(TEST_$(1)_COMMAND)',@echo "                 $(COLOR_GREEN)$(1) passed$(COLOR_RESET)")
 
 $(1):	$(CWD)/$(1).py $$(foreach lib,$(2),$$(PYTHON3_$$(lib)_DEPS)) $$(foreach pymod,$(2),$(TMPBIN)/$$(pymod)_pymod)
-	@$(PYFLAKES) $(CWD)/$(1).py
+	@$(PYFLAKES3) $(CWD)/$(1).py
 	PYTHON3PATH=$(RUN_PYTHON3PATH) $(PYTHON3) $(PYTHON3_ARGS) $(CWD)/$(1).py $($(1)_ARGS)
 
 .PHONY: $(1)
@@ -109,7 +109,7 @@ $$(if $(trace),$$(warning called install_python3_file "$(1)" "$(2)"))
 
 $(PYTHON3_PURE_LIB_PATH)/$(2)/$(1):	$(CWD)/$(1) $(PYTHON3_PURE_LIB_PATH)/$(2)/.dir_exists
 	$$(if $(verbose_build),@echo "cp $$< $$@",@echo " $(COLOR_YELLOW)[PYTHON3_MODULE]$(COLOR_RESET) $(2)/$(1)")
-	@$(PYFLAKES) $$<
+	@$(PYFLAKES3) $$<
 	@cp $$< $$@~
 	@mv $$@~ $$@
 
@@ -162,7 +162,7 @@ run_$(1):	$(PYTHON3_BIN_PATH)/$(1)
 
 $(PYTHON3_BIN_PATH)/$(1): $(CWD)/$(2) $(PYTHON3_BIN_PATH)/.dir_exists $$(foreach pymod,$(3),$(TMPBIN)/$$(pymod)_pymod) $$(foreach pymod,$(3),$$(PYTHON3_$$(pymod)_DEPS))
 	@echo "$(COLOR_BLUE)[PYTHON3_PROGRAM]$(COLOR_RESET) $(1)"
-	@$(PYFLAKES) $$<
+	@$(PYFLAKES3) $$<
 	@(echo "#!$(PYTHON3_EXECUTABLE)"; cat $$<) > $$@~
 	@chmod +x $$@~
 	@mv $$@~ $$@
