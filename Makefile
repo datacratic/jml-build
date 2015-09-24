@@ -1,6 +1,5 @@
 # Makefile for Jeremy's Machine Learning library
 # Copyright (c) 2006 Jeremy Barnes.  All rights reserved.
-
 -include local.mk
 
 default: all
@@ -27,6 +26,7 @@ include $(JML_TOP)/arch/$(ARCH).mk
 include $(JML_TOP)/functions.mk
 include $(JML_TOP)/rules.mk
 include $(JML_TOP)/python.mk
+include $(JML_TOP)/python3.mk
 include $(JML_TOP)/node.mk
 
 include $(JML_TOP)/jml.mk
