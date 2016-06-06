@@ -1,9 +1,8 @@
-NODE_V8_LIB ?= $(if $(NODE_DEBUG),node-v8_g,node-v8)
-
 ifeq ($(NODEJS_ENABLED),1)
 
 NODE ?= $(if $(NODE_DEBUG),node_g,node)
 NPM ?= npm
+NODE_V8_LIB ?= $(if $(NODE_DEBUG),node-v8_g,node-v8)
 NODE_PRELOAD ?= LD_PRELOAD=$(LIB)/libexception_hook.so
 VOWS ?= /usr/local/bin/vows
 NODE_PATH := $(if $(NODE_PATH),$(NODE_PATH):)$(BIN)
