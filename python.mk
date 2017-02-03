@@ -22,6 +22,9 @@ ifdef VIRTUALENV
 
 $(VIRTUALENV)/bin/activate:
 	virtualenv --setuptools $(VIRTUALENV)
+	$(PIP) install -U pip==9.0.1 # update the environment with more recent base packages
+	$(RM) -rf $(VIRTUALENV)/lib/python2.7/site-packages/{setuptools,setuptools.pth,easy-install.pth}
+	PYTHONPATH=$(VIRTUALENV)/lib/python2.7/site-packages/pip/_vendor $(PIP) install -U setuptools==34.1.1
 
 python_dependencies: $(VIRTUALENV)/bin/activate
 
