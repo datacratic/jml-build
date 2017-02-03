@@ -21,7 +21,7 @@ PYTHONPATH ?= RUN_PYTHONPATH
 ifdef VIRTUALENV3
 
 $(VIRTUALENV3)/bin/activate:
-	virtualenv -p python3 $(VIRTUALENV3)
+	virtualenv -p python3 --setuptools $(VIRTUALENV3)
 
 python3_dependencies: $(VIRTUALENV3)/bin/activate
 

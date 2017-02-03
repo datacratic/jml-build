@@ -21,7 +21,7 @@ PYTHONPATH ?= RUN_PYTHONPATH
 ifdef VIRTUALENV
 
 $(VIRTUALENV)/bin/activate:
-	virtualenv $(VIRTUALENV)
+	virtualenv --setuptools $(VIRTUALENV)
 
 python_dependencies: $(VIRTUALENV)/bin/activate
 
